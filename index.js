@@ -1,5 +1,7 @@
 import express from 'express'
 import cors from 'cors'
+import bodyParser from 'body-parser'
+import { verifyIfIdIsValid } from './utils.js'
 const app = express()
 const port = 3000
 
@@ -44,20 +46,23 @@ const alunos = [
 
 
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 
 //rotas
+
+/*  GET  */
 app.get('/alunos', (req, res) => {
     res.status(200).send(alunos)
 })
 
 app.get('/alunos/:id', (req, res) => {
     const id = req.params.id;
-    console.log(id)
     const aluno = alunos.find( e => e.id === Number(id))
 
-    if(!Number(id)) {
-        res.status(400).json({message: "Informe um id válido"})
-    }
+    verifyIfIdIsValid(res, id)
+
     if(!!aluno ){
         res.status(200).send(aluno)
     } else {
@@ -66,6 +71,41 @@ app.get('/alunos/:id', (req, res) => {
 })
 
 
+/*  PUT */
+app.put('/alunos/:id', (req, res) => {
+    const id = req.params.id;
+    const payload = req.body;
+    const index = alunos.findIndex(e => e.id === Number(id))
+    
+
+    verifyIfIdIsValid(res, id)
+
+    if(index !== -1){
+        alunos[index] = payload;
+        res.status(200).send(alunos[index])
+    } else {
+        res.status(404).json({message: "Não existe aluno com o id enviado."})
+    }
+})
+
+/*  DELETE  */
+app.delete('/alunos/:id', (req, res) => {
+    const id = req.params.id;
+    const index = alunos.findIndex(e => e.id === Number(id))
+
+    
+    verifyIfIdIsValid(res, id)
+
+    if(index !== -1){
+        alunos.splice(index, 1)
+        res.status(200).send("Aluno deletado do sistema")
+    } else {
+        res.status(404).json({message: "Não existe aluno com o id enviado."})
+    }
+})
+
 app.listen(port, () => {
     console.log('server start on port: ', port)
 })
+
+
