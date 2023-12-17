@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 const app = express()
 const port = 3000
 
@@ -42,6 +43,8 @@ const alunos = [
    ]
 
 
+app.use(cors())
+
 //rotas
 app.get('/alunos', (req, res) => {
     res.status(200).send(alunos)
@@ -53,12 +56,12 @@ app.get('/alunos/:id', (req, res) => {
     const aluno = alunos.find( e => e.id === Number(id))
 
     if(!Number(id)) {
-        res.status(400).json({message: "Informe um id válido."})
+        res.status(400).json({message: "Informe um id válido"})
     }
     if(!!aluno ){
         res.status(200).send(aluno)
     } else {
-        res.status(404).json({message: "O aluno não existe na base de dados."})
+        res.status(404).json({message: "O aluno não existe na base de dados"})
     }
 })
 
