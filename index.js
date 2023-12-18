@@ -70,6 +70,31 @@ app.get('/alunos/:id', (req, res) => {
     }
 })
 
+/*  post */
+app.post('/alunos', (req, res) => {
+    const payload = req.body;
+    const lastId = alunos[alunos.length -1].id
+
+    payload.id = lastId + 1
+    let total = 0
+    
+    
+    const arrayFromPayloadValues = Object.values(payload)
+    const arrayFromPayloadKeys = Object.keys(payload)
+
+  arrayFromPayloadValues.forEach((elemento, index) => {
+        if(!elemento){
+            res.status(400).json({message: `O campo ${arrayFromPayloadKeys[index]} precisa ser preenchido.`})
+            total += 1
+        }
+    })
+
+    if(total === 0){
+        alunos.push(payload)
+        res.status(200).send(alunos)
+    }
+     
+})
 
 /*  PUT */
 app.put('/alunos/:id', (req, res) => {
