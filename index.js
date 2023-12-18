@@ -98,7 +98,7 @@ app.delete('/alunos/:id', (req, res) => {
 
     if(index !== -1){
         alunos.splice(index, 1)
-        res.status(200).send("Aluno deletado do sistema")
+        res.status(200).send(alunos)
     } else {
         res.status(404).json({message: "Não existe aluno com o id enviado."})
     }
